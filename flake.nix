@@ -16,13 +16,13 @@
   in {
     packages.${system}.default = beamPackages.mixRelease {
       inherit src pname version MIX_ENV;
+      MIX_TAILWIND_PATH = "${pkgs.tailwindcss}/bin/tailwindcss";
+      MIX_ESBUILD_PATH = "${pkgs.esbuild}/bin/esbuild";
       mixNixDeps = import ./deps.nix {
         inherit (pkgs) lib beamPackages;
       };
       postBuild = ''
-        mkdir -p $out/lib/${pname}-${version}/priv
-        cp -r priv $out/lib/${pname}-${version}/priv
-        cp -r assets $out/lib/${pname}-${version}/priv/static
+        mix do deps.loadpaths --no-deps-check, assets.deploy
       '';
     };
   };
